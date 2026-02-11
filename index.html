@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FREE Movies</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Roboto,sans-serif}
+body{background:#151515;color:white;overflow:hidden}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;width:100%;height:60px;background:black;z-index:1000}
+.navbar-container{display:flex;justify-content:space-between;align-items:center;height:100%;padding:0 40px}
+.logo{color:red;font-size:28px;font-weight:bold}
+.menu{list-style:none;display:flex;gap:25px}
+.menu li{cursor:pointer}
+.menu li:hover{color:red}
+.search-box{background:#222;border:none;padding:6px 12px;color:white;border-radius:20px;outline:none}
+
+/* SECTIONS */
+.section{display:none;width:100vw;height:100vh;position:absolute;top:0;left:0;padding:100px 50px;overflow-y:auto;transition:opacity 0.3s ease;background:#151515}
+.section.active{display:block;opacity:1;z-index:10}
+
+/* CATEGORIES */
+.categories{display:flex;gap:15px;margin-bottom:20px}
+.category-btn{padding:8px 18px;background:#222;border:none;color:white;cursor:pointer;border-radius:20px}
+.category-btn.active,.category-btn:hover{background:red}
+
+/* MOVIES */
+.movie-list{display:flex;gap:20px;flex-wrap:wrap}
+.movie-item{width:200px; display:flex; flex-direction:column; align-items:center; position:relative;}
+.movie-item img{width:100%;border-radius:10px}
+.movie-item .movie-title{margin-top:5px; text-align:center; font-weight:bold; font-size:14px; color:white;}
+.movie-item button{width:100%;margin-top:5px;padding:8px;background:red;border:none;color:white;cursor:pointer;border-radius:5px}
+
+/* SEASONS & EPISODES */
+.season-container{display:none; position:relative; top:0; left:0; width:100%; background:#222; padding:5px; border-radius:8px; flex-direction:column; gap:5px;}
+.episode-list{display:none; flex-direction:column; gap:5px;}
+.season-container button, .episode-list button{background:#444; font-size:14px; width:100%; text-align:left; cursor:pointer;}
+
+/* PLAYER */
+.netflix-player{position:fixed;inset:0;background:rgba(0,0,0,.95);display:none;justify-content:center;align-items:center;z-index:9999}
+.netflix-player-content{width:85%;max-width:900px;position:relative}
+.netflix-player video{width:100%;border-radius:12px}
+.close-player{position:absolute;top:-40px;right:0;font-size:35px;cursor:pointer}
+
+/* HOME BACKGROUND VIDEO */
+#home{position:relative;overflow:hidden;height:100vh;padding:0;display:flex;justify-content:center;align-items:center;text-align:center}
+#homeVideo{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.home-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.6);z-index:-1}
+.home-content{z-index:2}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="navbar-container">
+        <div class="logo">FREE MOVIES</div>
+        <input type="text" class="search-box" placeholder="Search movies..." onkeyup="searchMovies(this.value)">
+        <ul class="menu">
+            <li onclick="showSection('home')">Home</li>
+            <li onclick="showSection('movies')">Movies</li>
+            <li onclick="showSection('about')">About</li>
+        </ul>
+    </div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="section active">
+    <video autoplay muted loop id="homeVideo">
+        <source src="hereditary.mp4" type="video/mp4">
+    </video>
+    <div class="home-overlay"></div>
+    <div class="home-content">
+        <h1 style="font-size:60px;">Welcome 🎬</h1>
+        <p style="font-size:20px;margin-top:15px;">Free Movies Watch – No Subscription</p>
+    </div>
+</div>
+
+<!-- MOVIES -->
+<div id="movies" class="section">
+    <h1>Movies</h1>
+
+    <!-- CATEGORIES -->
+    <div class="categories">
+        <button class="category-btn active" onclick="filterMovies('all', this)">All</button>
+        <button class="category-btn" onclick="filterMovies('horror', this)">Horror</button>
+        <button class="category-btn" onclick="filterMovies('anime', this)">Anime</button>
+        <button class="category-btn" onclick="filterMovies('action', this)">Action</button>
+        <button class="category-btn" onclick="filterMovies('drama', this)">Drama</button>
+    </div>
+
+    <!-- MOVIE LIST -->
+    <div class="movie-list" id="movieList">
+
+    <!-- HORROR MOVIES -->
+    <div class="movie-item" data-category="horror" data-title="hereditary">
+        <img src="horror1.jpg">
+        <div class="movie-title">Hereditary</div>
+        <button data-video="hereditary.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="horror" data-title="the-conjuring">
+        <img src="horror2.jpg">
+        <div class="movie-title">The Conjuring</div>
+        <button data-video="theconjuring.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="horror" data-title="seklusyon">
+        <img src="horror3.jpg">
+        <div class="movie-title">Seklusyon</div>
+        <button data-video="seklusyon.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="horror" data-title="a-quiet-place">
+        <img src="horror4.jpg">
+        <div class="movie-title">A Quiet Place</div>
+        <button data-video="aquietplace.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="horror" data-title="talk-to-me">
+        <img src="horror5.jpg">
+        <div class="movie-title">Talk To Me</div>
+        <button data-video="talktome.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="horror" data-title="the-exorcist">
+        <img src="horror6.jpg">
+        <div class="movie-title">The Exorcist</div>
+        <button data-video="theexorcist.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="horror" data-title="feng-shui">
+        <img src="horror7.jpg">
+        <div class="movie-title">Feng Shui</div>
+        <button data-video="fengshui.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="horror" data-title="barbarian">
+        <img src="horror8.jpg">
+        <div class="movie-title">Barbarian</div>
+        <button data-video="barbarian.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="horror" data-title="train-to-busan">
+        <img src="horror9.jpg">
+        <div class="movie-title">Train To Busan</div>
+        <button data-video="traintobusan.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="horror" data-title="the-it-follows">
+        <img src="horror10.jpg">
+        <div class="movie-title">The It Follows</div>
+        <button data-video="theitfollows.mp4">Watch</button>
+    </div>
+
+    <!-- ACTION MOVIES -->
+    <div class="movie-item" data-category="action" data-title="john-wick">
+        <img src="action1.jpg">
+        <div class="movie-title">John Wick</div>
+        <button data-video="johnwick.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="action" data-title="mad-max-fury-road">
+        <img src="action2.jpg">
+        <div class="movie-title">Mad Max: Fury Road</div>
+        <button data-video="madmax.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="action" data-title="the-raid-redemption">
+        <img src="action3.jpg">
+        <div class="movie-title">The Raid: Redemption</div>
+        <button data-video="theraid.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="action" data-title="top-gun-maverick">
+        <img src="action4.jpg">
+        <div class="movie-title">Top Gun: Maverick</div>
+        <button data-video="topgun.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="action" data-title="buybust">
+        <img src="action5.jpg">
+        <div class="movie-title">BuyBust</div>
+        <button data-video="buybust.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="action" data-title="extraction">
+        <img src="action6.jpg">
+        <div class="movie-title">Extraction</div>
+        <button data-video="extraction.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="action" data-title="the-dark-knight">
+        <img src="action7.jpg">
+        <div class="movie-title">The Dark Knight</div>
+        <button data-video="darkknight.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="action" data-title="heat">
+        <img src="action8.jpg">
+        <div class="movie-title">Heat</div>
+        <button data-video="heat.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="action" data-title="kill-bill-vol1">
+        <img src="action9.jpg">
+        <div class="movie-title">Kill Bill Vol. 1</div>
+        <button data-video="killbill.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="action" data-title="on-the-job">
+        <img src="action10.jpg">
+        <div class="movie-title">On The Job</div>
+        <button data-video="onthejob.mp4">Watch</button>
+    </div>
+
+    <!-- DRAMA MOVIES -->
+    <div class="movie-item" data-category="drama" data-title="shawshank-redemption">
+        <img src="drama1.jpg">
+        <div class="movie-title">Shawshank Redemption</div>
+        <button data-video="shawshank.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="drama" data-title="parasite">
+        <img src="drama2.jpg">
+        <div class="movie-title">Parasite</div>
+        <button data-video="parasite.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="drama" data-title="magnifico">
+        <img src="drama3.jpg">
+        <div class="movie-title">Magnifico</div>
+        <button data-video="magnifico.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="drama" data-title="the-whale">
+        <img src="drama4.jpg">
+        <div class="movie-title">The Whale</div>
+        <button data-video="thewhale.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="drama" data-title="schindlers-list">
+        <img src="drama5.jpg">
+        <div class="movie-title">Schindler's List</div>
+        <button data-video="schindlerslist.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="drama" data-title="anak">
+        <img src="drama6.jpg">
+        <div class="movie-title">Anak</div>
+        <button data-video="anak.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="drama" data-title="everything-everywhere-all-at-once">
+        <img src="drama7.jpg">
+        <div class="movie-title">Everything Everywhere All At Once</div>
+        <button data-video="eeaaao.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="drama" data-title="the-pursuit-of-happyness">
+        <img src="drama8.jpg">
+        <div class="movie-title">The Pursuit Of Happyness</div>
+        <button data-video="pursuitofhappyness.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="drama" data-title="cinema-paradiso">
+        <img src="drama9.jpg">
+        <div class="movie-title">Cinema Paradiso</div>
+        <button data-video="cinemaparadiso.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="drama" data-title="past-lives">
+        <img src="drama10.jpg">
+        <div class="movie-title">Past Lives</div>
+        <button data-video="pastlives.mp4">Watch</button>
+    </div>
+	
+	<div class="movie-item" data-category="anime" data-title="my-neighbor-totoro">
+        <img src="anime3.jpg">
+        <div class="movie-title">My Neighbor Totoro</div>
+        <button data-video="myneighbortotoro.mp4">Watch</button>
+    </div>
+    <div class="movie-item" data-category="anime" data-title="princess-mononoke">
+        <img src="anime4.jpg">
+        <div class="movie-title">Princess Mononoke</div>
+        <button data-video="princessmononoke.mp4">Watch</button>
+    </div>
+
+    <!-- ANIME MOVIES/SHOWS -->
+<div class="movie-item" data-category="anime" data-title="attack-on-titan">
+    <img src="anime5.jpg">
+    <div class="movie-title">Attack on Titan</div>
+    <button class="toggle-season">Seasons &#9660;</button>
+    <div class="season-container">
+        <button class="toggle-episodes">Season 1 &#9660;</button>
+        <div class="episode-list">
+            <button data-video="titans1e1.mp4">Ep1</button>
+            <button data-video="videos/spiritedaway-s1ep2.mp4">Ep2</button>
+            <button data-video="videos/spiritedaway-s1ep3.mp4">Ep3</button>
+            <button data-video="videos/spiritedaway-s1ep4.mp4">Ep4</button>
+            <button data-video="videos/spiritedaway-s1ep5.mp4">Ep5</button>
+        </div>
+        <button class="toggle-episodes">Season 2 &#9660;</button>
+        <div class="episode-list">
+            <button data-video="videos/spiritedaway-s2ep1.mp4">Ep1</button>
+            <button data-video="videos/spiritedaway-s2ep2.mp4">Ep2</button>
+            <button data-video="videos/spiritedaway-s2ep3.mp4">Ep3</button>
+            <button data-video="videos/spiritedaway-s2ep4.mp4">Ep4</button>
+            <button data-video="videos/spiritedaway-s2ep5.mp4">Ep5</button>
+        </div>
+    </div>
+</div>
+
+<div class="movie-item" data-category="anime" data-title="hunter-x-hunter">
+    <img src="anime6.jpg">
+    <div class="movie-title">Hunter x Hunter</div>
+    <button class="toggle-season">Seasons &#9660;</button>
+    <div class="season-container">
+        <button class="toggle-episodes">Season 1 &#9660;</button>
+        <div class="episode-list">
+            <button data-video="hxhs1e1.mp4">Ep1</button>
+            <button data-video="videos/hxh-s1ep2.mp4">Ep2</button>
+            <button data-video="videos/hxh-s1ep3.mp4">Ep3</button>
+            <button data-video="videos/hxh-s1ep4.mp4">Ep4</button>
+            <button data-video="videos/hxh-s1ep5.mp4">Ep5</button>
+        </div>
+        <button class="toggle-episodes">Season 2 &#9660;</button>
+        <div class="episode-list">
+            <button data-video="videos/hxh-s2ep1.mp4">Ep1</button>
+            <button data-video="videos/hxh-s2ep2.mp4">Ep2</button>
+            <button data-video="videos/hxh-s2ep3.mp4">Ep3</button>
+            <button data-video="videos/hxh-s2ep4.mp4">Ep4</button>
+            <button data-video="videos/hxh-s2ep5.mp4">Ep5</button>
+        </div>
+    </div>
+</div>
+
+<div class="movie-item" data-category="anime" data-title="your-name">
+    <img src="img/anime7.jpg">
+    <div class="movie-title">Your Name</div>
+    <button class="toggle-season">Seasons &#9660;</button>
+    <div class="season-container">
+        <button class="toggle-episodes">Season 1 &#9660;</button>
+        <div class="episode-list">
+            <button data-video="videos/yourname-s1ep1.mp4">Ep1</button>
+            <button data-video="videos/yourname-s1ep2.mp4">Ep2</button>
+            <button data-video="videos/yourname-s1ep3.mp4">Ep3</button>
+            <button data-video="videos/yourname-s1ep4.mp4">Ep4</button>
+            <button data-video="videos/yourname-s1ep5.mp4">Ep5</button>
+        </div>
+        <button class="toggle-episodes">Season 2 &#9660;</button>
+        <div class="episode-list">
+            <button data-video="videos/yourname-s2ep1.mp4">Ep1</button>
+            <button data-video="videos/yourname-s2ep2.mp4">Ep2</button>
+            <button data-video="videos/yourname-s2ep3.mp4">Ep3</button>
+            <button data-video="videos/yourname-s2ep4.mp4">Ep4</button>
+            <button data-video="videos/yourname-s2ep5.mp4">Ep5</button>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ABOUT -->
+<div id="about" class="section">
+    <h1>About</h1>
+    <p>User-friendly streaming platform showcasing curated Horror, Action, and Drama films, including Anime series with organized seasons and episodes.</p>
+</div>
+
+<!-- PLAYER -->
+<div id="netflixPlayer" class="netflix-player">
+    <div class="netflix-player-content">
+        <span class="close-player">&times;</span>uy
+        <video id="netflixVideo" controls autoplay></video>
+    </div>
+</div>
+
+<script>
+function showSection(id){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function filterMovies(category, btn){
+    document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.movie-item').forEach(m=>{
+        m.style.display = category==='all'||m.dataset.category===category?'flex':'none';
+    });
+}
+
+function searchMovies(text){
+    text = text.toLowerCase();
+
+    // Always go to Movies section when searching
+    showSection('movies');
+
+    // Remove active state from category buttons
+    document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+
+    // Show all first before filtering
+    document.querySelectorAll('.movie-item').forEach(m=>{
+        m.style.display = 'flex';
+    });
+
+    // Filter by search text
+    document.querySelectorAll('.movie-item').forEach(m=>{
+        if(!m.dataset.title.toLowerCase().includes(text)){
+            m.style.display = 'none';
+        }
+    });
+}
+
+
+/* PLAYER */
+const player=document.getElementById("netflixPlayer");
+const video=document.getElementById("netflixVideo");
+
+// Play video for any button with data-video
+document.querySelectorAll(".movie-item button[data-video]").forEach(btn=>{
+    btn.onclick=()=>{video.src=btn.dataset.video; player.style.display="flex"; video.play();}
+});
+
+document.querySelector(".close-player").onclick=()=>{video.pause();video.src="";player.style.display="none"}
+player.onclick=e=>{if(e.target===player){video.pause();video.src="";player.style.display="none"}}
+
+/* SEASONS & EPISODES - Scoped per movie */
+document.querySelectorAll(".movie-item").forEach(movie=>{
+    const seasonBtn = movie.querySelector(".toggle-season");
+    if(seasonBtn){
+        const seasonContainer = movie.querySelector(".season-container");
+        seasonBtn.onclick=()=>{seasonContainer.style.display = seasonContainer.style.display==="flex"?"none":"flex";};
+        movie.querySelectorAll(".toggle-episodes").forEach(epBtn=>{
+            const episodeList = epBtn.nextElementSibling;
+            epBtn.onclick=()=>{episodeList.style.display = episodeList.style.display==="flex"?"none":"flex";};
+        });
+    }
+});
+</script>
+</body>
+</html>
